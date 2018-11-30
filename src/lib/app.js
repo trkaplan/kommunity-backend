@@ -105,13 +105,15 @@ export default class App {
       this.express.use(sentry.Handlers.requestHandler());
     }
 
-
+    // SECURITY
     this.express.use(helmet({
       frameguard: {
         action: 'deny',
       },
     }));
-    this.express.use(Cors()); // TODO update cors policy
+    // TODO update cors policy
+    this.express.use(Cors()); 
+    
     this.express.use(Morgan(morganConfig.format, morganConfig.options));
     this.express.use(Express.json());
     this.express.use(Express.urlencoded({ extended: false }));
