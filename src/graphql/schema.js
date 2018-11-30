@@ -68,7 +68,9 @@ export default gql`
 
   type Query {
     getLoggedInUserDetails : LoggedInUserDetails
-    getUserDetailsById(id: ID!): UserDetails
+    getUserDetailsByUuid(uuid: ID!): UserDetails
+    getLoggedInUserCommunities: [Community]
+    getUserCommunitiesByUuid(uuid: ID!): [Community]
     searchCommunities(name: String!): [Community]
     findPopularCommunities: [Community]
   }
