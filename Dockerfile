@@ -12,7 +12,7 @@ RUN npm install
 COPY . .
 
 # Install sample data
-RUN npm run db-setup
+# RUN npm run db-setup
 
 EXPOSE 8080
 CMD [ "npm", "start" ]
