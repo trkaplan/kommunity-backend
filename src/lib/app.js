@@ -1,6 +1,7 @@
 /* eslint-disable no-console */
 import * as http from 'http';
 import type { Server } from 'http';
+import get from 'lodash/get';
 import path from 'path';
 import Express from 'express';
 import Sequelize from 'sequelize';
@@ -44,7 +45,7 @@ export default class App {
   }
 
   init = (): void => {
-    const { port } = this.config.server;
+    const port = get(process, 'env.PORT') || this.config.server.port;
     this.initExpressApp();
     this.server = http.createServer(this.express);
     this.server.listen(port);
@@ -147,7 +148,11 @@ export default class App {
   };
 
   initDbClient = (): void => {
-    this.sequelize = DbClient(this.config.db);
+    if (process.env.NODE_ENV !== 'test'
+      && typeof process.env.DATABASE_URL !== 'string') {
+      throw new Error('Database connecting string is missing!');
+    }
+    this.sequelize = DbClient(process.env.DATABASE_URL || '');
   };
 
   initModels = (): void => {

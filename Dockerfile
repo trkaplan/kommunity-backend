@@ -1,18 +1,19 @@
 FROM node:8
 
+# Heroku overrides this on staging/production environment
+ENV NODE_ENV development
+
 # Create app directory
-WORKDIR /usr/src/kommunity
+WORKDIR /usr/app
+
+# For now, only copy package.json, BETTER FOR CACHING
+COPY package.json ./
 
 # Install app dependencies
-COPY package*.json ./
-
 RUN npm install
 
-# Bundle app source
+# Now, it is time to copy the src
 COPY . .
 
-# Install sample data
-RUN npm run db-setup
-
-EXPOSE 8080
-CMD [ "npm", "start" ]
+# It will be npm run start:production on heroku (see heroku.yml)
+CMD ["npm", "start"]

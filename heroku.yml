@@ -1,0 +1,13 @@
+build:
+  docker:
+    web: Dockerfile
+    worker: Dockerfile
+run:
+  web: "npm run start:pipeline"
+setup:
+  addons:
+    - plan: heroku-postgresql
+release:
+  image: worker
+  command:
+    - npm run db-mock-setup
