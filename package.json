@@ -6,6 +6,7 @@
     "node": "8.11.4"
   },
   "scripts": {
+    "start:prod": "cross-env NODE_ENV=production babel-node src/server.js",
     "start": "cross-env NODE_ENV=development nodemon src/server.js --exec babel-node",
     "watch": "cross-env NODE_ENV=development npm start",
     "check-if-not-committed": "node scripts/git/check-if-not-committed.js",
