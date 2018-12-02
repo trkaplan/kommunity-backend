@@ -158,7 +158,7 @@ const items = [
     min_role_required: 'guest',
     created_at: new Date(),
     updated_at: new Date(),
-  }
+  },
 ];
 
 module.exports = {

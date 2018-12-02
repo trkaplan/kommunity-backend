@@ -1,9 +1,9 @@
 import path from 'path';
-import Sequelize, { type Options as SequelizeOptions } from 'sequelize';
+import Sequelize from 'sequelize';
 import { getAllFiles } from './helpers';
 
-export default (sequelizeOptions: SequelizeOptions): Sequelize => {
-  return new Sequelize(process.env.DATABASE_URL);
+export default (connectionUrl: string): Sequelize => {
+  return new Sequelize(connectionUrl);
 };
 
 export const importModels = (modelsPath: string, dbClient: Sequelize): AppModels => {
