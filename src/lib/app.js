@@ -1,6 +1,7 @@
 /* eslint-disable no-console */
 import * as http from 'http';
 import type { Server } from 'http';
+import get from 'lodash/get';
 import path from 'path';
 import Express from 'express';
 import Sequelize from 'sequelize';
@@ -44,20 +45,19 @@ export default class App {
   }
 
   init = (): void => {
-    const { port } = this.config.server;
-    const usedPort = process.env.PORT || port;
+    const port = get(process, 'env.PORT') || this.config.server.port;
     this.initExpressApp();
     this.server = http.createServer(this.express);
-    this.server.listen(usedPort);
+    this.server.listen(port);
 
     /* istanbul ignore next */
     this.server.on('error', (error) => {
       if (error.syscall !== 'listen') {
         throw error;
       }
-      const bind = typeof usedPort === 'string'
-        ? `Pipe ${usedPort}`
-        : `Port ${usedPort}`;
+      const bind = typeof port === 'string'
+        ? `Pipe ${port}`
+        : `Port ${port}`;
 
       // handle specific listen errors with friendly messages
       switch (error.code) {
@@ -75,7 +75,7 @@ export default class App {
     });
 
     this.server.on('listening', () => {
-      console.log(`EXPRESS 🎢  Server is ready at http://localhost:${usedPort}`);
+      console.log(`EXPRESS 🎢  Server is ready at http://localhost:${port}`);
     });
   };
 
