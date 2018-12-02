@@ -82,26 +82,6 @@ module.exports = (sequelize: Sequelize, dataTypes: DataTypes) => {
         isDate: true,
       },
     },
-    createdAt: {
-      type: dataTypes.DATE,
-      field: 'created_at',
-    },
-    updatedAt: {
-      type: dataTypes.DATE,
-      field: 'updatedAt',
-      allowNull: true,
-      validate: {
-        isDate: true,
-      },
-    },
-    deletedAt: {
-      type: dataTypes.DATE,
-      field: 'deletedAt',
-      allowNull: true,
-      validate: {
-        isDate: true,
-      },
-    },
   },
   {
     paranoid: true,
