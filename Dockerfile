@@ -1,18 +1,16 @@
 FROM node:8
 
 # Create app directory
-WORKDIR /usr/src/kommunity
-
-# Install app dependencies
-COPY package*.json ./
-
-RUN npm install
+WORKDIR /usr/app/kommunity
 
 # Bundle app source
 COPY . .
 
+# Install app dependencies
+RUN npm install
+
 # Install sample data
 # RUN npm run db-setup
 
-EXPOSE 80
-CMD ["npm", "run", "start:prod"]
+# It will be npm run start:prod on heroku (see heroku.yml)
+CMD ["npm", "run", "start"]
