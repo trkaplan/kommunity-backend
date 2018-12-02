@@ -45,18 +45,19 @@ export default class App {
 
   init = (): void => {
     const { port } = this.config.server;
+    const usedPort = process.env.PORT || port;
     this.initExpressApp();
     this.server = http.createServer(this.express);
-    this.server.listen(port);
+    this.server.listen(usedPort);
 
     /* istanbul ignore next */
     this.server.on('error', (error) => {
       if (error.syscall !== 'listen') {
         throw error;
       }
-      const bind = typeof port === 'string'
-        ? `Pipe ${port}`
-        : `Port ${port}`;
+      const bind = typeof usedPort === 'string'
+        ? `Pipe ${usedPort}`
+        : `Port ${usedPort}`;
 
       // handle specific listen errors with friendly messages
       switch (error.code) {
@@ -74,7 +75,7 @@ export default class App {
     });
 
     this.server.on('listening', () => {
-      console.log(`EXPRESS 🎢  Server is ready at http://localhost:${port}`);
+      console.log(`EXPRESS 🎢  Server is ready at http://localhost:${usedPort}`);
     });
   };
 
