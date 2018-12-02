@@ -1,0 +1,19 @@
+version: '3'
+services:
+  web:
+    build: .
+    ports:
+      - "3008:3008"
+    depends_on:
+      - db
+    volumes:
+      - ./:/usr/app
+    environment:
+      DATABASE_URL: postgres://postgres:postgres@db:5432/community-development
+  db:
+    image: postgres:latest
+    ports:
+    - "5432:5432"
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres

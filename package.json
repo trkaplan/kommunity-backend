@@ -7,7 +7,7 @@
   },
   "scripts": {
     "start:prod": "cross-env NODE_ENV=production babel-node src/server.js",
-    "start": "cross-env NODE_ENV=development nodemon src/server.js --exec babel-node",
+    "start": "cross-env NODE_ENV=development nodemon -L src/server.js --watch src --exec babel-node",
     "watch": "cross-env NODE_ENV=development npm start",
     "check-if-not-committed": "node scripts/git/check-if-not-committed.js",
     "check-travis": "cross-env NODE_ENV=test run-s -nl lint flow cover",
@@ -19,7 +19,17 @@
     "flow-coverage": "flow coverage --color",
     "flow-typed-add": "flow-typed install",
     "db-setup": "cross-env NODE_ENV=development npm run db-setup-dev",
-    "db-setup-dev": "sequelize db:create && babel-node scripts/db/dev-db-setup.js && sequelize db:migrate && sequelize db:seed:all"
+    "db-setup-dev": "(sequelize db:drop || sleep 5 && sequelize db:create) && babel-node scripts/db/dev-db-setup.js && sequelize db:migrate && sequelize db:seed:all && echo >> DB SETUP COMPLETE!",
+
+    "CONTAINER_SCRIPTS": "-------------------------------",
+    "container:start": "docker-compose up --build --force-recreate -d && docker-compose logs -f",
+    "container:setup": "npm run container:web-exec \"npm run db-setup\"",
+    "container:list": "docker ps",
+    "container:exec": "docker exec -i",
+    "container:web-exec": "docker ps --filter name=kommunitybackend_web -q | xargs sh -c 'docker exec -i $2 $1' sh",
+    "container:web-sh": "docker-compose exec web sh",
+    "container:db-exec": "docker ps --filter name=kommunitybackend_db -q | xargs sh -c 'docker exec -i $2 $1' sh",
+    "container:db-sh": "docker-compose exec db sh"
   },
   "pre-push": [
     "check-if-not-committed",
@@ -47,6 +57,7 @@
     "passport": "^0.4.0",
     "passport-local": "^1.0.0",
     "passport-strategy": "^1.0.0",
+    "pg": "^7.7.1",
     "sequelize": "^4.39.0",
     "uuid": "^3.3.2"
   },

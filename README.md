@@ -1,5 +1,5 @@
 # Kommunity Backend Server
-Kommunity is an online app for creating & joining communities. This is the backend app.
+Kommunity is an online app for building great communities.
 
 Check product [documentation](https://docs.google.com/document/d/1P9znOKfQIHDP3BVS5ptvFgzSLmL0vo4WTAZrcKatFBA) for more details.
 
@@ -10,54 +10,67 @@ Check product [documentation](https://docs.google.com/document/d/1P9znOKfQIHDP3B
 ```bash
 # Replace FORK_URL with what you just copied
 git clone FORK_URL
-```
-
-### 1. Install XAMPP 
-Download and install MAMP
-- macOS v7.2.11: https://sourceforge.net/projects/xampp/files/XAMPP%20Mac%20OS%20X/7.2.11/
-- Windows v7.2.11: https://sourceforge.net/projects/xampp/files/XAMPP%20Windows/7.2.11/
-
-Once you install, open the XAMPP app and **make sure APACHE and MYSQL server are both started** (green box).
-
-You can visit http://localhost/phpmyadmin/ to see the tables, etc.
-
-### 2. Install Node.js
-Go to [node.js v8.11.4 installation page](https://nodejs.org/en/blog/release/v8.11.4/). Pick either macOS 64-bit installer or Windows Installer depending on your operation system.
-
-#### Optional
-NVM really makes it easier to switch between node.js versions. If you are working on other projects that require different versions of node/npm, then you can install `nvm` from here:
-- Windows: https://github.com/coreybutler/nvm-windows/releases
-- Mac: https://github.com/creationix/nvm/blob/master/README.md#installation
-
-Once you install NVM, 
-```bash
-nvm install 8.11.4
-nvm use 8.11.4
-```
-
-##### Fix NVM issue
-There is a bug in nvm codebase, and it breaks on **windows** machines.
-
-Do the following if you are experiencing issues:
-- open `node_modules/pre-push/index.js`
-- find `if (!this.npm)`
-- right after if block, put: `this.npm += ".cmd";`
-
-### 3. Install dependencies
-``` bash
 cd kommunity-backend
-npm install
 ```
 
-### 4. Create DB tables and generate sample data
+### 1. Install Docker and start it
+- Setup docker: [click here](https://store.docker.com/search?type=edition&offering=community)
+- Start the docker app
+
+##### Windows?
+- You may need to put the project folder under `C:/Users/` directory, otherwise volume mounting may not work.
+- You can't install Docker on Windows 10 HOME (and 7, vista, ..). Instead, install Docker **TOOLBOX** from here: 
+https://docs.docker.com/toolbox/toolbox_install_windows/
+- Go to toolbox folder, and start the docker by double clicking on `..\Docker Toolbox\start.cmd`.
+- Output will look like this:
+```
+docker is configured to use the default machine with IP 192.168.99.100
+For help getting started, check out the docs at https://docs.docker.com
+```
+
+- Copy the IP address from the log.
+
+### 2. Start the container 
 ``` bash
-npm run db-setup
+npm run container:start
 ```
 
-### 5. Start backend server
-```bash
-npm run start
+Now, you should see the server ready messages:
 ```
+web_1  | GRAPHQL 🚀  Server ready at http://localhost:4000/gql
+web_1  | GRAPHQL ✨  Playground server ready at http://localhost:4000/gql-dev
+web_1  | EXPRESS 🎢  Server is ready at http://localhost:3008
+```
+
+### 3. Setup database
+In a separate terminal, run:
+``` bash
+npm run container:setup
+```
+
+You should see:
+```
+>>> DB SETUP COMPLETE!
+```
+
+All set! Go to [http://localhost:3008/health](http://localhost:3008/health) -- you should see:
+```
+OK
+```
+
+##### Windows?
+If you are using Windows 10 Home, or older versions of Windows (7, vista, ..), you need to install Docker Toolbox instead of Docker. See instructions above.
+
+Instead of using localhost, use the IP address you copied in step 1, for example:
+[http://192.168.99.100:3008/health](http://192.168.99.100:3008/health)
+
+### Useful docker commands
+- `npm run container:list`: list of running containers (for our project, there should be two; web and postgres)
+- `npm run container:exec`: execute a command on container. You may need to copy the container id from the list command above, then run: `npm run container:exec CONTAINER_ID -- COMMAND`, for example: `npm run container:exec f859dad1b5f8 -- ls -l`
+- `npm run container:web-exec`: execute a command on web (server) container. Example: `npm run container:web-exec "ls -l"`
+- `npm run container:web-sh`: start the shell in web container (server)
+- `npm run container:db-exec`: execute a command on db (postgres) container
+- `npm run container:db-sh`: start the shell in db container 
 
 ## Other details
 
@@ -112,23 +125,15 @@ In order to avoid flow type errors, you can fetch definitions for popular module
 npm run flow-typed-add express@4
 ```
 
-## Production
+## Deployments
 Commands you need:
 
 ### Heroku
 - Login to heroku:
 `heroku login` 
+
 - Add heroku app to local:
 `heroku git:remote -a staging-kommunity-backend` 
+
 - See logs:
 `heroku logs --tail`
-
-### Docker
-- List of active containers:
-`docker ps -l`
-- Build container:
-`docker build -t backend .`
-- Start container:
-
-Windows:
-``

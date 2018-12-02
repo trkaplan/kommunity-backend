@@ -13,10 +13,10 @@
     "playgroundPath": "/gql-dev"
   },
   "db": {
-    "hostname": "localhost",
-    "port": 3306,
+    "hostname": "db",
+    "port": 5432,
     "database": "community-development",
-    "username": "root",
-    "password": ""
+    "username": "postgres",
+    "password": "postgres"
   }
 }

@@ -3,7 +3,7 @@ import Sequelize, { type Options as SequelizeOptions } from 'sequelize';
 import { getAllFiles } from './helpers';
 
 export default (sequelizeOptions: SequelizeOptions): Sequelize => {
-  return new Sequelize(sequelizeOptions);
+  return new Sequelize(process.env.DATABASE_URL);
 };
 
 export const importModels = (modelsPath: string, dbClient: Sequelize): AppModels => {

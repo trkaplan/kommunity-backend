@@ -17,7 +17,7 @@
   },
   "db": {
     "hostname": "localhost",
-    "port": 3306,
+    "port": 5432,
     "database": "community-production",
     "username": "root",
     "password": ""

@@ -8,6 +8,8 @@ const items = [
     content: 'Test conversation posts 01',
     view_count: 10,
     attachment_upload_uuids: '{"uuids" : ["23ea0d96-d6a1-11e8-9f8b-f2801f1b9fd1"]}',
+    created_at: new Date(),
+    updated_at: new Date(),
   },
   {
     uuid: '1749091a-d78d-11e8-9f8b-f2801f1b9fd1',
@@ -18,6 +20,8 @@ const items = [
     content: 'Test conversation posts 02',
     view_count: 10,
     attachment_upload_uuids: null,
+    created_at: new Date(),
+    updated_at: new Date(),
   },
   {
     uuid: '17490a78-d78d-11e8-9f8b-f2801f1b9fd1',
@@ -28,6 +32,8 @@ const items = [
     content: 'Test conversation posts 03',
     view_count: 10,
     attachment_upload_uuids: null,
+    created_at: new Date(),
+    updated_at: new Date(),
   },
   {
     uuid: '17490bae-d78d-11e8-9f8b-f2801f1b9fd1',
@@ -38,6 +44,8 @@ const items = [
     content: 'Test conversation posts 04',
     view_count: 10,
     attachment_upload_uuids: null,
+    created_at: new Date(),
+    updated_at: new Date(),
   },
   {
     uuid: '17490ce4-d78d-11e8-9f8b-f2801f1b9fd1',
@@ -48,36 +56,8 @@ const items = [
     content: 'Test conversation posts 05',
     view_count: 10,
     attachment_upload_uuids: null,
-  },
-  {
-    uuid: '17490e1a-d78d-11e8-9f8b-f2801f1b9fd1',
-    author_uuid: '3346776a-d69d-11e8-9f8b-f2801f1b9fd1',
-    parent_uuid: null,
-    community_uuid: '6c52debe-d6a6-11e8-9f8b-f2801f1b9fd1',
-    category_uuid: '310g93c8-d76a-11e8-9f8b-f2801f1b9fd1',
-    content: 'Test conversation posts 06',
-    view_count: 5,
-    attachment_upload_uuids: null,
-  },
-  {
-    uuid: '1749102c-d78d-11e8-9f8b-f2801f1b9fd1',
-    author_uuid: '33467fee-d69d-11e8-9f8b-f2801f1b9fd1',
-    parent_uuid: '17490e1a-d78d-11e8-9f8b-f2801f1b9fd1',
-    community_uuid: '6c52debe-d6a6-11e8-9f8b-f2801f1b9fd1',
-    category_uuid: '310g93c8-d76a-11e8-9f8b-f2801f1b9fd1',
-    content: 'Test conversation posts 07',
-    view_count: 5,
-    attachment_upload_uuids: '{"uuids" : ["23ea02d8-d6a1-11e8-9f8b-f2801f1b9fd1"]}',
-  },
-  {
-    uuid: '17491176-d78d-11e8-9f8b-f2801f1b9fd1',
-    author_uuid: '3346776a-d69d-11e8-9f8b-f2801f1b9fd1',
-    parent_uuid: '17490e1a-d78d-11e8-9f8b-f2801f1b9fd1',
-    community_uuid: '6c52debe-d6a6-11e8-9f8b-f2801f1b9fd1',
-    category_uuid: '310g93c8-d76a-11e8-9f8b-f2801f1b9fd1',
-    content: 'Test conversation posts 08',
-    view_count: 5,
-    attachment_upload_uuids: null,
+    created_at: new Date(),
+    updated_at: new Date(),
   },
   {
     uuid: '174913e2-d78d-11e8-9f8b-f2801f1b9fd1',
@@ -88,6 +68,8 @@ const items = [
     content: 'Test conversation posts 09',
     view_count: 5,
     attachment_upload_uuids: null,
+    created_at: new Date(),
+    updated_at: new Date(),
   },
   {
     uuid: '174915c2-d78d-11e8-9f8b-f2801f1b9fd1',
@@ -98,6 +80,8 @@ const items = [
     content: 'Test conversation posts 10',
     view_count: 5,
     attachment_upload_uuids: '{"uuids" : ["23ea065c-d6a1-11e8-9f8b-f2801f1b9fd1"]}',
+    created_at: new Date(),
+    updated_at: new Date(),
   },
 ];
 
