@@ -1,19 +1,41 @@
 import type App from '$/lib/app';
 import uuid from 'uuid';
 
+const COMMUNITY_VISIBILITY_PUBLIC = 'public';
+
 export default (app: App) => {
   return {
     Query: {
       getLoggedInUserDetails: (parent: {}, args: {}, user: AppUser) => {
-        return app.models.User.find({
+        return app.models.User.findOne({
           include: [{ model: app.models.Community }],
           where: { uuid: user.uuid },
         });
       },
-      getUserDetailsById: (parent: {}, args: { id: uuid }) => {
-        return app.models.User.find({
+      getUserDetailsByUuid: (parent: {}, args: { uuid: uuid }) => {
+        return app.models.User.findOne({
           include: [{ model: app.models.Community }],
-          where: { uuid: args.id },
+          where: { uuid: args.uuid },
+        });
+      },
+      getLoggedInUserCommunities: async (parent: {}, args: {}, user: AppUser) => {
+        // returns public and private communities
+        const foundUser = await app.models.User.findOne({
+          include: [{ model: app.models.Community }],
+          where: { uuid: user.uuid },
+        });
+
+        return foundUser.Communities || [];
+      },
+      getUserCommunitiesByUuid: async (parent: {}, args: { uuid: uuid }) => {
+        // returns public communities
+        const user = await app.models.User.findOne({
+          include: [{ model: app.models.Community }],
+          where: { uuid: args.uuid },
+        });
+
+        return (user.Communities || []).filter((community) => {
+          return community.visibility === COMMUNITY_VISIBILITY_PUBLIC;
         });
       },
       // returns communities with most members
@@ -54,7 +76,8 @@ export default (app: App) => {
         tier: string,
         visibility: string,
       }) => {
-        return app.models.Community.create({ // TODO avatarUploadUuid, socialLinks
+        // TODO avatarUploadUuid, socialLinks
+        return app.models.Community.create({
           uuid: uuid(),
           name: args.name,
           tagline: args.tagline,

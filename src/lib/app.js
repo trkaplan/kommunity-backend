@@ -16,7 +16,7 @@ import { getAllFiles } from './helpers';
 import DbClient, { importModels } from './db-client';
 
 import authenticationMiddleware from '$/middlewares/auth';
-import gqlTypeDefs from '$/graphql/type-defs';
+import gqlSchema from '$/graphql/schema';
 import gqlResolvers from '$/graphql/resolvers';
 
 import LocalPassportStrategy from '$/passport-auth/local-strategy';
@@ -112,8 +112,8 @@ export default class App {
       },
     }));
     // TODO update cors policy
-    this.express.use(Cors()); 
-    
+    this.express.use(Cors());
+
     this.express.use(Morgan(morganConfig.format, morganConfig.options));
     this.express.use(Express.json());
     this.express.use(Express.urlencoded({ extended: false }));
@@ -175,7 +175,7 @@ export default class App {
   initGqlServer = (express: express$Application): void => {
     const that = this;
     const serverConf = {
-      typeDefs: gqlTypeDefs,
+      typeDefs: gqlSchema,
       resolvers: gqlResolvers(this),
       context: ({ req }) => req.user,
     };
