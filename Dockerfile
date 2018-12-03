@@ -12,5 +12,5 @@ RUN npm install
 # Now, it is time to copy the src
 COPY . .
 
-# It will be npm run start:prod on heroku (see heroku.yml)
+# It will be npm run start:production on heroku (see heroku.yml)
 CMD ["npm", "start"]
