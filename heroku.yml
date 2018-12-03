@@ -12,4 +12,3 @@ release:
 setup:
   addons:
     - plan: heroku-postgresql
-
