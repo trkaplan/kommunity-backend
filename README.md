@@ -159,7 +159,7 @@ Commands you need:
 `heroku login` 
 
 - Add heroku app to local:
-`heroku git:remote -a staging-kommunity-backend` 
+`heroku git:remote -a staging-backend-kommunity` 
 
 - See logs:
 `heroku logs --tail`
