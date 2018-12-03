@@ -20,7 +20,6 @@
     "flow-typed-add": "flow-typed install",
     "db-setup": "cross-env NODE_ENV=development npm run db-setup-dev",
     "db-setup-dev": "(sequelize db:drop || sleep 5 && sequelize db:create) && babel-node scripts/db/dev-db-setup.js && sequelize db:migrate && sequelize db:seed:all && echo >> DB SETUP COMPLETE!",
-
     "CONTAINER_SCRIPTS": "-------------------------------",
     "container:start": "docker-compose up --build --force-recreate -d && docker-compose logs -f",
     "container:setup": "npm run container:web-exec \"npm run db-setup\"",
@@ -82,6 +81,7 @@
     "npm": "^6.4.1",
     "npm-run-all": "^4.1.5",
     "pre-push": "^0.1.1",
-    "sequelize-cli": "^5.2.0"
+    "sequelize-cli": "^5.2.0",
+    "sequelize-mock": "^0.10.2"
   }
 }
