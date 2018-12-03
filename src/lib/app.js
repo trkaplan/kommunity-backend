@@ -148,7 +148,11 @@ export default class App {
   };
 
   initDbClient = (): void => {
-    this.sequelize = DbClient(this.config.db);
+    if (process.env.NODE_ENV !== 'test'
+      && typeof process.env.DATABASE_URL !== 'string') {
+      throw new Error('Database connecting string is missing!');
+    }
+    this.sequelize = DbClient(process.env.DATABASE_URL || '');
   };
 
   initModels = (): void => {

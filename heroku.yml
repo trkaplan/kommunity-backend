@@ -1,5 +1,14 @@
 build:
   docker:
     web: Dockerfile
+
 run:
-  web: npm run start:prod
+  web: npm run start:pipeline
+
+release:
+  command:
+    - npm run db-setup-staging
+
+setup:
+  addons:
+    - plan: heroku-postgresql

@@ -11,12 +11,5 @@
   },
   "gqlServer": {
     "playgroundPath": "/gql-dev"
-  },
-  "db": {
-    "hostname": "localhost",
-    "port": 3306,
-    "database": "community-development",
-    "username": "root",
-    "password": ""
   }
 }

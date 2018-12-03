@@ -14,12 +14,5 @@
       "format": "combined",
       "options": {}
     }
-  },
-  "db": {
-    "hostname": "localhost",
-    "port": 3306,
-    "database": "community-production",
-    "username": "root",
-    "password": ""
   }
 }

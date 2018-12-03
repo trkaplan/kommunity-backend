@@ -10,6 +10,8 @@ const items = [
     avatar_upload_uuid: '23ea1110-d6a1-11e8-9f8b-f2801f1b9fd1',
     last_seen_at: new Date(),
     confirmed_email_at: new Date(),
+    created_at: new Date(),
+    updated_at: new Date(),
   },
   {
     uuid: '33467ba2-d69d-11e8-9f8b-f2801f1b9fd1',
@@ -22,6 +24,8 @@ const items = [
     avatar_upload_uuid: '23ea0b02-d6a1-11e8-9f8b-f2801f1b9fd1',
     last_seen_at: new Date(),
     confirmed_email_at: new Date(),
+    created_at: new Date(),
+    updated_at: new Date(),
   },
   {
     uuid: '33467fee-d69d-11e8-9f8b-f2801f1b9fd1',
@@ -34,6 +38,8 @@ const items = [
     avatar_upload_uuid: '23ea0530-d6a1-11e8-9f8b-f2801f1b9fd1',
     last_seen_at: new Date(),
     confirmed_email_at: new Date(),
+    created_at: new Date(),
+    updated_at: new Date(),
   },
   {
     uuid: '33467a44-d69d-11e8-9f8b-f2801f1b9fd1',
@@ -46,6 +52,8 @@ const items = [
     avatar_upload_uuid: '23fa0530-d6a1-11e8-9f8b-f2801f1b9fd1',
     last_seen_at: new Date(),
     confirmed_email_at: new Date(),
+    created_at: new Date(),
+    updated_at: new Date(),
   },
   {
     uuid: '33467e86-d69d-11e8-9f8b-f2801f1b9fd1',
@@ -58,6 +66,8 @@ const items = [
     avatar_upload_uuid: null,
     last_seen_at: null,
     confirmed_email_at: null,
+    created_at: new Date(),
+    updated_at: new Date(),
   },
   {
     uuid: '23e9da9c-d69d-11e8-9f8b-f2801f1b9fd1',
@@ -70,6 +80,8 @@ const items = [
     avatar_upload_uuid: null,
     last_seen_at: null,
     confirmed_email_at: null,
+    created_at: new Date(),
+    updated_at: new Date(),
   },
 ];
 

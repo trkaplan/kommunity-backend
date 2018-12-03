@@ -9,7 +9,9 @@ const items = [
     avatar_upload_uuid: '23ea0fe4-d6a1-11e8-9f8b-f2801f1b9fd1',
     tier: 'free',
     visibility: 'public',
-    is_active: 0,
+    is_active: false,
+    created_at: new Date(),
+    updated_at: new Date(),
   },
   {
     uuid: '6c52debe-d6a6-11e8-9f8b-f2801f1b9fd1',
@@ -21,7 +23,9 @@ const items = [
     avatar_upload_uuid: '23ea0eb8-d6a1-11e8-9f8b-f2801f1b9fd1',
     tier: 'free',
     visibility: 'private',
-    is_active: 1,
+    is_active: true,
+    created_at: new Date(),
+    updated_at: new Date(),
   },
   {
     uuid: '6c52e274-d6a6-11e8-9f8b-f2801f1b9fd1',
@@ -33,7 +37,9 @@ const items = [
     avatar_upload_uuid: '23ea0cb8-d6a1-11e8-9f8b-f2801f1b9fd1',
     tier: 'free',
     visibility: 'secret',
-    is_active: 1,
+    is_active: true,
+    created_at: new Date(),
+    updated_at: new Date(),
   },
   {
     uuid: '6c52e3c8-d6a6-11e8-9f8b-f2801f1b9fd1',
@@ -45,7 +51,9 @@ const items = [
     avatar_upload_uuid: '23ea0787-d6a1-11e8-9f8b-f2801f1b9fd1',
     tier: 'free',
     visibility: 'public',
-    is_active: 1,
+    is_active: true,
+    created_at: new Date(),
+    updated_at: new Date(),
   },
   {
     uuid: '6c52e508-d6a6-11e8-9f8b-f2801f1b9fd1',
@@ -57,7 +65,9 @@ const items = [
     avatar_upload_uuid: '23ea0788-d6a1-11e8-9f8b-f2801f1b9fd1',
     tier: 'free',
     visibility: 'private',
-    is_active: 0,
+    is_active: false,
+    created_at: new Date(),
+    updated_at: new Date(),
   },
   {
     uuid: '6c52e63e-d6a6-11e8-9f8b-f2801f1b9fd1',
@@ -69,7 +79,9 @@ const items = [
     avatar_upload_uuid: '23ea0404-d6a1-11e8-9f8b-f2801f1b9fd1',
     tier: 'free',
     visibility: 'public',
-    is_active: 1,
+    is_active: true,
+    created_at: new Date(),
+    updated_at: new Date(),
   },
 ];
 

@@ -3,9 +3,7 @@ import path from 'path';
 import Sequelize from 'sequelize';
 import DbClient, { importModels } from '$/lib/db-client';
 
-const config: AppConfig = require('$/config');
-
-const dbClient: Sequelize = DbClient(config.db);
+const dbClient: Sequelize = DbClient(process.env.DATABASE_URL);
 const modelsPath = path.join(__dirname, '../../src/models');
 importModels(modelsPath, dbClient);
 

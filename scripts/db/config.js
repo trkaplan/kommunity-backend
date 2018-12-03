@@ -1,19 +1,12 @@
 // we need this for es6 features:
 require('babel-core/register');
 
-const {
-  db: {
-    hostname, dialect, database, username, password,
-  },
-} = require('../../src/config');
+const { db: { dialect } } = require('../../src/config');
 
 const sequelizeCliConfig = {
   [process.env.NODE_ENV]: {
-    database,
+    url: process.env.DATABASE_URL,
     dialect,
-    host: hostname,
-    password,
-    username,
   },
 };
 
