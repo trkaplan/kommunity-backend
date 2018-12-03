@@ -71,6 +71,7 @@ Instead of using localhost, use the IP address you copied in step 1, for example
 - `npm run container:web-sh`: start the shell in web container (server)
 - `npm run container:db-exec`: execute a command on db (postgres) container
 - `npm run container:db-sh`: start the shell in db container 
+- `npm run container:reset`: delete all(!) docker images, and rebuilds them and start
 
 ## Other details
 

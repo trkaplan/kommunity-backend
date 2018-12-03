@@ -9,7 +9,7 @@ services:
     volumes:
       - ./:/usr/app
     environment:
-      DATABASE_CONN_URL: postgres://postgres:postgres@db:5432/community-development
+      DATABASE_URL: postgres://postgres:postgres@db:5432/community-development
   db:
     image: postgres:latest
     ports:

@@ -28,7 +28,8 @@
     "container:web-exec": "docker ps --filter name=kommunitybackend_web -q | xargs sh -c 'docker exec -i $2 $1' sh",
     "container:web-sh": "docker-compose exec web sh",
     "container:db-exec": "docker ps --filter name=kommunitybackend_db -q | xargs sh -c 'docker exec -i $2 $1' sh",
-    "container:db-sh": "docker-compose exec db sh"
+    "container:db-sh": "docker-compose exec db sh",
+    "container:reset": "docker-compose stop && docker-compose rm -f && run-s -nl container:start"
   },
   "pre-push": [
     "check-if-not-committed",
