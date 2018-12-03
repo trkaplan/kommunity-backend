@@ -74,6 +74,31 @@ Instead of using localhost, use the IP address you copied in step 1, for example
 
 ## Other details
 
+### Database admin UI (pgAdmin)
+Go to:
+[http://localhost:6432](http://localhost:6432) 
+
+Login using the following credentials:
+username: `dev@selmankahya.com` -- password: `selman`
+
+- Click on `Add New Server`
+
+- Fill in the form:
+
+```
+General - Name:                     kommunity-backend
+Connection - Hostname:              db
+Connection - Port:                  5432
+Connection - Maintenance database:  postgres
+Connection - Username:              postgres
+Connection - Password:              postgres
+Connection - Save Password:         Tick
+```
+
+- On the left side, you can now see all the tables, and data:
+
+`Servers` -> `kommunity-backend` -> `Databases` -> `postgres` -> `Schemas` -> `public` -> `Tables`
+
 ### Git instructions for developing new features
 
 ```bash
