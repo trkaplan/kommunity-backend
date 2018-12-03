@@ -6,8 +6,8 @@
     "node": "8.11.4"
   },
   "scripts": {
-    "start:pipeline": "babel-node src/server.js",
     "start": "NODE_ENV=development nodemon -L src/server.js --watch src --exec babel-node",
+    "start-pipeline": "babel-node src/server.js",
     "check-if-not-committed": "node scripts/git/check-if-not-committed.js",
     "check-travis": "NODE_ENV=test run-s -nl lint flow cover",
     "test": "cross-env NODE_ENV=test jest --config .jest.json --forceExit",
