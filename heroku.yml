@@ -10,4 +10,10 @@ setup:
 release:
   image: worker
   command:
+    - "pwd"
+    - "ls -l"
+    - "ls -l /usr"
+    - "ls -l /usr/app"
+    - "ls -l /usr/app/scripts"
+    - "ls -l /usr/app/scripts/db"
     - node ./scripts/db/staging-db-setup.js
