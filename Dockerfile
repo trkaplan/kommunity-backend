@@ -1,5 +1,7 @@
 FROM node:8
 
+ENV NODE_ENV development
+
 # Create app directory
 WORKDIR /usr/app
 
