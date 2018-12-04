@@ -10,4 +10,4 @@ setup:
 release:
   image: worker
   command:
-    - npm run mock-setup
+    - npm run db-mock-setup
