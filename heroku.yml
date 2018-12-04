@@ -1,9 +1,13 @@
 build:
   docker:
     web: Dockerfile
+    worker: Dockerfile.worker
 run:
-  web: "npm run db-setup-staging && npm run start:pipeline"
+  web: "npm run start:pipeline"
 setup:
   addons:
     - plan: heroku-postgresql
-
+release:
+  image: worker
+  command:
+    - echo HI
