@@ -1,7 +1,7 @@
 build:
   docker:
     web: Dockerfile
-    worker: Dockerfile.worker
+    worker: Dockerfile
 run:
   web: "npm run start:pipeline"
 setup:
@@ -10,4 +10,4 @@ setup:
 release:
   image: worker
   command:
-    - echo HI
+    - node ./scripts/db/staging-db-setup.js
