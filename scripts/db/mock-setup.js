@@ -9,6 +9,7 @@ if (['development', 'staging'].indexOf(process.env.NODE_ENV) > -1) {
   importModels(modelsPath, dbClient);
 
   console.log('\n>>> CREATING DB TABLES\n');
+  console.log('\n>>> CREATING DB TABLES\n');
 
   dbClient.sync({ force: true })
     .then(() => {
