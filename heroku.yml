@@ -10,4 +10,4 @@ setup:
 release:
   image: worker
   command:
-    - node ./scripts/db/staging-db-setup.js
+    - npm run db-setup-staging
