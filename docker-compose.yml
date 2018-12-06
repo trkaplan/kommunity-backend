@@ -1,9 +1,11 @@
 version: '3'
 services:
   web:
+    container_name: kommunitybackend_web
     build: .
     ports:
       - "3008:3008"
+      - "4000:4000"
     depends_on:
       - db
     volumes:
@@ -11,6 +13,7 @@ services:
     environment:
       DATABASE_URL: postgres://postgres:postgres@db:5432/community-development
   db:
+    container_name: kommunitybackend_db
     image: postgres:latest
     ports:
     - "5432:5432"
@@ -18,6 +21,7 @@ services:
       POSTGRES_USER: postgres
       POSTGRES_PASSWORD: postgres
   db-admin:
+    container_name: kommunitybackend_dbadmin
     image: dpage/pgadmin4
     depends_on:
       - db

@@ -66,13 +66,22 @@ export default gql`
     Users: [UserDetails]
   }
 
+  type PopularCommunity {
+    uuid: String
+    name: String
+    tagline: String
+    desc: String
+    location: String
+    userCount: Int
+  }
+
   type Query {
     getLoggedInUserDetails : LoggedInUserDetails
     getUserDetailsByUuid(uuid: ID!): UserDetails
     getLoggedInUserCommunities: [Community]
     getUserCommunitiesByUuid(uuid: ID!): [Community]
     searchCommunities(name: String!): [Community]
-    findPopularCommunities: [Community]
+    findPopularCommunities: [PopularCommunity]
   }
 
   type Mutation {

@@ -30,7 +30,12 @@ For help getting started, check out the docs at https://docs.docker.com
 
 - Copy the IP address from the log.
 
-### 2. Start the container 
+
+### 2. Install app dependencies 
+``` bash
+npm install
+```
+### 3. Start the container (TODO: Seperate container setup steps)
 ``` bash
 npm run container:start
 ```
@@ -42,7 +47,7 @@ web_1  | GRAPHQL ✨  Playground server ready at http://localhost:4000/gql-dev
 web_1  | EXPRESS 🎢  Server is ready at http://localhost:3008
 ```
 
-### 3. Setup database
+### 4. Setup database
 In a separate terminal, run:
 ``` bash
 npm run container:setup
