@@ -16,13 +16,11 @@ import config from '$/config';
 import { getAllFiles } from './helpers';
 import DbClient, { importModels } from './db-client';
 
-import authenticationMiddleware from '$/middlewares/auth';
 import gqlSchema from '$/graphql/schema';
 import gqlResolvers from '$/graphql/resolvers';
 
 import LocalPassportStrategy from '$/passport-auth/local-strategy';
 import JwtPassportStrategy from '$/passport-auth/jwt-strategy';
-import { generateTokenForUser } from '$/passport-auth/lib';
 
 export default class App {
   routesPath: string;
@@ -185,8 +183,10 @@ export default class App {
       context: ({ req }) => req.user,
     };
 
-    /* TODO: authenticate users in the resolvers */
-    /*
+    /* TODO: authenticate users in the resolvers
+    import authenticationMiddleware from '$/middlewares/auth';
+    import { generateTokenForUser } from '$/passport-auth/lib';
+
     express.use((req: exExpress$Request, res: express$Response, next: express$NextFunction) => {
       if (req.path === that.config.gqlServer.rootPath) {
         return authenticationMiddleware(req, res, next);
