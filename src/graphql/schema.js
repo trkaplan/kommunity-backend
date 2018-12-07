@@ -81,7 +81,7 @@ export default gql`
     getLoggedInUserCommunities: [Community]
     getUserCommunitiesByUuid(uuid: ID!): [Community]
     searchCommunities(name: String!): [Community]
-    findPopularCommunities: [PopularCommunity]
+    popularCommunities: [PopularCommunity]
   }
 
   type Mutation {

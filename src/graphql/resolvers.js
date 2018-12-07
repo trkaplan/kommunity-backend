@@ -36,7 +36,7 @@ export default (app: App) => {
         where: { visibility: COMMUNITY_VISIBILITY_PUBLIC },
       });
     },
-    findPopularCommunities: () => {
+    popularCommunities: () => {
       // returns communities with most members
       return app.models.Community.findAll({
         limit: 10,
