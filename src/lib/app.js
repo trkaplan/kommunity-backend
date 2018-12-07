@@ -185,6 +185,8 @@ export default class App {
       context: ({ req }) => req.user,
     };
 
+    /* TODO: authenticate users in the resolvers */
+    /*
     express.use((req: exExpress$Request, res: express$Response, next: express$NextFunction) => {
       if (req.path === that.config.gqlServer.rootPath) {
         return authenticationMiddleware(req, res, next);
@@ -199,6 +201,7 @@ export default class App {
       }
       return next();
     });
+     */
 
     const server = new ApolloServer(serverConf);
     server.applyMiddleware({ app: express, path: this.config.gqlServer.rootPath });
