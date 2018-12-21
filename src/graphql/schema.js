@@ -49,12 +49,14 @@ export default gql`
 
   type UserDetails {
     uuid: ID!
+    firstName: String
+    lastName: String
     username: String
     location: String
     avatarUploadUuid: ID
     lastSeenAt: Date
   }
-  
+
   type Community {
     uuid: String
     name: String
@@ -76,22 +78,32 @@ export default gql`
   }
 
   type Query {
-    getLoggedInUserDetails : LoggedInUserDetails
+    getLoggedInUserDetails: LoggedInUserDetails
     getUserDetailsByUuid(uuid: ID!): UserDetails
     getLoggedInUserCommunities: [Community]
     getUserCommunitiesByUuid(uuid: ID!): [Community]
     searchCommunities(name: String!): [Community]
+    searchUsers(queryText:String!): [UserDetails]
     popularCommunities: [PopularCommunity]
   }
 
   type Mutation {
     createCommunity(
-      name: String, 
-      tagline: String, 
-      desc: String, 
-      location: String, 
-      tier: CommunityTier, 
-      visibility: CommunityType,
-      ) : Community
+      name: String
+      tagline: String
+      desc: String
+      location: String
+      tier: CommunityTier
+      visibility: CommunityType
+    ): Community
+    createUser(
+      email: String
+      password: String
+      username: String
+      firstName: String
+      lastName: String
+      userAttributes: String
+      location: String
+    ): UserDetails
   }
 `;
