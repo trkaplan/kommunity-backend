@@ -77,7 +77,28 @@ export default gql`
     userCount: Int
   }
 
+  type Message {
+    channelUUID: String
+    uuid: String
+    sender: String
+    text: String
+    ts: String
+  }
+
+  type Channel {
+    uuid: String
+    name: String
+    desc: String
+  }
+
+  type ChannelMessages {
+    nextCursor: Int
+    messages: [Message]
+  }
+
   type Query {
+    getChannels: [Channel]
+    getMessagesForChannel(channelUUID: String!, cursor: Int): ChannelMessages
     getLoggedInUserDetails: LoggedInUserDetails
     getUserDetailsByUuid(uuid: ID!): UserDetails
     getLoggedInUserCommunities: [Community]
@@ -105,5 +126,14 @@ export default gql`
       userAttributes: String
       location: String
     ): UserDetails
+    sendMessage(
+      channelUUID: String
+      sender: String,
+      text: String,
+    ) : Message
+  }
+
+  type Subscription {
+    messageSent(channelUUID: String!): Message
   }
 `;
