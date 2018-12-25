@@ -55,6 +55,7 @@ export default gql`
     location: String
     avatarUploadUuid: ID
     lastSeenAt: Date
+    CommunityUser: CommunityUser
   }
 
   type Community {
@@ -68,6 +69,13 @@ export default gql`
     Users: [UserDetails]
   }
 
+  type CommunityUser {
+    communityUuid: String
+    userUuid: String
+    status: String
+    role: String
+  }
+
   type PopularCommunity {
     uuid: String
     name: String
@@ -78,6 +86,7 @@ export default gql`
   }
 
   type Query {
+    getCommunityMembers(uuid: ID!): Community
     getLoggedInUserDetails: LoggedInUserDetails
     getUserDetailsByUuid(uuid: ID!): UserDetails
     getLoggedInUserCommunities: [Community]

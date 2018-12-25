@@ -42,6 +42,9 @@ module.exports = (sequelize: Sequelize, dataTypes: DataTypes) => {
     freezeTableName: true,
     tableName: 'community_users',
   });
+  CommunityUser.associate = (models) => {
+    CommunityUser.belongsTo(models.User);
+  };
 
   return CommunityUser;
 };
