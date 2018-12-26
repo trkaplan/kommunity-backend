@@ -1,89 +1,35 @@
 import type App from '$/lib/app';
 import { PubSub, withFilter } from 'graphql-subscriptions';
 import uuid from 'uuid';
+import mockChannels from './mocks/channels';
+import mockMessages from './mocks/messages';
 import md5 from 'md5';
 
 export const pubsub = new PubSub();
 
 const COMMUNITY_VISIBILITY_PUBLIC = 'public';
-const PAGE_SIZE = 20;
-
-const channels = [
-  {
-    uuid: '23ea1110-d6a1-11e8-9f8b-f2801f1b9fd1',
-    name: 'General',
-    desc: 'life stuff..',
-  },
-  {
-    uuid: '11ae3e22-d6a1-11e8-9f8b-f2801f1b9fd1',
-    name: 'React',
-    desc: 'discussions on react..',
-  },
-];
-
-const messages = {
-  '23ea1110-d6a1-11e8-9f8b-f2801f1b9fd1': [
-    {
-      channelUUID: '23ea1110-d6a1-11e8-9f8b-f2801f1b9fd1',
-      uuid: uuid(),
-      sender: 'selmank',
-      text: 'hello!',
-      ts: Date.now().toString(),
-    },
-    {
-      channelUUID: '23ea1110-d6a1-11e8-9f8b-f2801f1b9fd1',
-      uuid: uuid(),
-      sender: 'mehmet',
-      text: 'whats up',
-      ts: Date.now().toString(),
-    },
-  ],
-  '11ae3e22-d6a1-11e8-9f8b-f2801f1b9fd1': [],
-};
+const MESSAGES_PAGE_SIZE = 20;
 
 export default (app: App) => {
   const Query = {
-    getChannels: (parent: {}, args: {}, user: AppUser) => {
-      return channels;
+    getChannels: () => {
+      return mockChannels;
     },
-    getMessagesForChannel: (parent: {}, args: {}, user: AppUser) => {
-      const paginatedMessages = messages[args.channelUUID];
-
-      // 0 mesaj var, page size 20
-      // -- 0 mesaji dondur
-
-      // 10 mesaj var, page size 20, page = 1
-      // -- 10 mesaji dondur
-
-      // 10 mesaj var, page size 20, page = 2
-      // -- 0 mesaji dondur
-
-      // 30 mesaj var, page size 20, page = 1
-      // -- 10-30 dondur
-
-      // 30 mesaj var, page size 20, page = 2
-      // -- 0 - 10 dondur
-
-      // 30 mesaj var, page size 20, page = 3
-      // -- []
-
-      if (paginatedMessages.length < PAGE_SIZE) {
+    getMessagesForChannel: (parent: {}, args: {channelUUID: string, cursor: number}) => {
+      const paginatedMessages = mockMessages[args.channelUUID];
+      if (paginatedMessages.length < MESSAGES_PAGE_SIZE) {
         return {
           messages: paginatedMessages,
           nextCursor: null,
         };
       }
-
-      // 30 mesaj var, page size 20, page = 2
-      // -- 0 - 10 dondur
-
-      const cursor = args.cursor || 1;
-      const start = paginatedMessages.length - PAGE_SIZE * cursor;
+      const cursor = args.cursor ? args.cursor : 1;
+      const start = paginatedMessages.length - MESSAGES_PAGE_SIZE * cursor;
       return {
         nextCursor: start <= 0 ? null : cursor + 1,
         messages: paginatedMessages.slice(
           start < 0 ? 0 : start,
-          start + PAGE_SIZE,
+          start + MESSAGES_PAGE_SIZE,
         ),
       };
     },
@@ -241,7 +187,7 @@ export default (app: App) => {
         text: args.text.slice(0, 100),
         ts: Date.now().toString(),
       };
-      messages[args.channelUUID].push(message);
+      mockMessages[args.channelUUID].push(message);
       pubsub.publish('MESSAGE_SENT', { messageSent: message });
       return message;
     },
