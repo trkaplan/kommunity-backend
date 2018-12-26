@@ -1,11 +1,38 @@
 import type App from '$/lib/app';
+import { PubSub, withFilter } from 'graphql-subscriptions';
 import uuid from 'uuid';
+import mockChannels from './mocks/channels';
+import mockMessages from './mocks/messages';
 import md5 from 'md5';
 
+export const pubsub = new PubSub();
+
 const COMMUNITY_VISIBILITY_PUBLIC = 'public';
+const MESSAGES_PAGE_SIZE = 20;
 
 export default (app: App) => {
   const Query = {
+    getChannels: () => {
+      return mockChannels;
+    },
+    getMessagesForChannel: (parent: {}, args: {channelUUID: string, cursor: number}) => {
+      const paginatedMessages = mockMessages[args.channelUUID];
+      if (paginatedMessages.length < MESSAGES_PAGE_SIZE) {
+        return {
+          messages: paginatedMessages,
+          nextCursor: null,
+        };
+      }
+      const cursor = args.cursor ? args.cursor : 1;
+      const start = paginatedMessages.length - MESSAGES_PAGE_SIZE * cursor;
+      return {
+        nextCursor: start <= 0 ? null : cursor + 1,
+        messages: paginatedMessages.slice(
+          start < 0 ? 0 : start,
+          start + MESSAGES_PAGE_SIZE,
+        ),
+      };
+    },
     getCommunityMembers: (parent: {}, args: { uuid: uuid }) => {
       // returns community members for given community id
       return app.models.Community.findOne({
@@ -157,10 +184,36 @@ export default (app: App) => {
         avatarUploadUuid: uuid(),
       });
     },
+    // CHAT
+    sendMessage: (parent: {}, args: {
+      channelUUID: string,
+      sender: string,
+      text: string,
+    }) => {
+      const message = {
+        uuid: uuid(),
+        channelUUID: args.channelUUID,
+        sender: args.sender.slice(0, 10),
+        text: args.text.slice(0, 100),
+        ts: Date.now().toString(),
+      };
+      mockMessages[args.channelUUID].push(message);
+      pubsub.publish('MESSAGE_SENT', { messageSent: message });
+      return message;
+    },
+  };
+
+  const Subscription = {
+    messageSent: {
+      subscribe: withFilter(() => pubsub.asyncIterator('MESSAGE_SENT'), (payload, variables) => {
+        return payload.messageSent.channelUUID === variables.channelUUID;
+      }),
+    },
   };
 
   return {
     Query,
     Mutation,
+    Subscription,
   };
 };
