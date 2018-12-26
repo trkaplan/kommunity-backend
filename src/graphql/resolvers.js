@@ -33,6 +33,16 @@ export default (app: App) => {
         ),
       };
     },
+    getCommunityMembers: (parent: {}, args: { uuid: uuid }) => {
+      // returns community members for given community id
+      return app.models.Community.findOne({
+        include: [
+          { model: app.models.User },
+          { model: app.models.CommunityUser },
+        ],
+        where: { uuid: args.uuid },
+      });
+    },
     getLoggedInUserDetails: (parent: {}, args: {}, user: AppUser) => {
       return app.models.User.findOne({
         include: [{ model: app.models.Community }],
