@@ -37,8 +37,9 @@ export default (app: App) => {
       // returns community members for given community id
       return app.models.Community.findOne({
         include: [
-          { model: app.models.User },
-          { model: app.models.CommunityUser },
+          {
+            model: app.models.User, as: 'users',
+          },
         ],
         where: { uuid: args.uuid },
       });

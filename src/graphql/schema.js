@@ -66,7 +66,7 @@ export default gql`
     location: String
     tier: CommunityTier
     visibility: CommunityType
-    Users: [UserDetails]
+    users: [UserDetails]
   }
 
   type CommunityUser {
