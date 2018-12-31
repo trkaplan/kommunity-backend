@@ -91,7 +91,7 @@ module.exports = (sequelize: Sequelize, dataTypes: DataTypes) => {
     Community.hasMany(models.ConversationCategory, {
       foreignKey: 'communityUuid',
     });
-    Community.hasMany(models.Event, { foreignKey: 'uuid', targetKey: 'uuid' });
+    Community.hasMany(models.Event, { foreignKey: 'communityUuid', targetKey: 'uuid' });
   };
 
   return Community;
