@@ -39,6 +39,7 @@
   "dependencies": {
     "@sentry/node": "^4.1.1",
     "apollo-server-express": "^2.1.0",
+    "axios": "^0.18.0",
     "babel-core": "^6.26.3",
     "config": "^2.0.1",
     "cookie-parser": "~1.4.3",
@@ -61,7 +62,8 @@
     "pg": "^7.7.1",
     "sequelize": "^4.39.0",
     "subscriptions-transport-ws": "^0.9.15",
-    "uuid": "^3.3.2"
+    "uuid": "^3.3.2",
+    "validator": "^10.10.0"
   },
   "devDependencies": {
     "babel-cli": "^6.26.0",

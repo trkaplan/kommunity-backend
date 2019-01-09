@@ -4,6 +4,10 @@ import uuid from 'uuid';
 import mockChannels from './mocks/channels';
 import mockMessages from './mocks/messages';
 import md5 from 'md5';
+import { generateTokenForUser } from '$/passport-auth/lib';
+import { RECAPTCHA_API_KEY } from '$/constants';
+import axios from 'axios';
+import validator from 'validator';
 
 export const pubsub = new PubSub();
 
@@ -158,6 +162,42 @@ export default (app: App) => {
         tier: args.tier,
         visibility: args.visibility,
       });
+    },
+    signup: async (parent: {}, args: {
+      email: string,
+      password: string,
+      captchaResponse: string
+    }) => {
+      // check captcha result before all
+      const verificationUrl = `https://www.google.com/recaptcha/api/siteverify?secret=${RECAPTCHA_API_KEY}&response=${args.captchaResponse}`;
+      const captchaResult = await axios(verificationUrl).then(response => response.data.success);
+      if (!captchaResult) {
+        throw new Error('Recaptcha verification failed, please refresh the page and try again.');
+      }
+
+      // input validations
+      if (!validator.isEmail(args.email)) { throw new Error('E-mail address must be valid.'); }
+      if (!validator.isLength(args.password, { min: 6 })) {
+        throw new Error('Password must be at least 6 characters long.');
+      }
+
+      // check if email already exists
+      const exists = await app.models.User.findOne({
+        where: { email: args.email },
+      });
+      if (exists) {
+        throw new Error('This e-mail address is already registered');
+      }
+
+      // all validations passed, create the user
+      const passwordHash = md5(args.password);
+      const user = await app.models.User.create({
+        uuid: uuid(),
+        email: args.email,
+        passwordHash,
+      });
+
+      return generateTokenForUser(user);
     },
     createUser: (
       parent: {},

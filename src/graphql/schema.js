@@ -139,8 +139,13 @@ export default gql`
       channelUUID: String
       sender: String,
       text: String,
-    ) : Message
-  }
+    ): Message
+    signup(
+      email: String!, 
+      password: String!, 
+      captchaResponse: String!
+    ): String
+  }  
 
   type Subscription {
     messageSent(channelUUID: String!): Message
