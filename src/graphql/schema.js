@@ -86,14 +86,15 @@ export default gql`
   }
 
   type Message {
-    channelUUID: String
+    channelUuid: String
     uuid: String
-    sender: String
+    sender: UserDetails
     text: String
-    ts: String
+    createdAt: Date
   }
 
   type Channel {
+    communityUuid: String
     uuid: String
     name: String
     desc: String
@@ -105,7 +106,7 @@ export default gql`
   }
 
   type Query {
-    getChannels: [Channel]
+    getChannels(communityUUID: String!): [Channel]
     getMessagesForChannel(channelUUID: String!, cursor: Int): ChannelMessages
     getCommunityMembers(uuid: ID!): Community
     getLoggedInUserDetails: LoggedInUserDetails
@@ -137,7 +138,7 @@ export default gql`
     ): UserDetails
     sendMessage(
       channelUUID: String
-      sender: String,
+      senderUUID: String,
       text: String,
     ): Message
     signup(

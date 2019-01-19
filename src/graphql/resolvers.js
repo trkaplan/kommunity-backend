@@ -1,8 +1,6 @@
 import type App from '$/lib/app';
 import { PubSub, withFilter } from 'graphql-subscriptions';
 import uuid from 'uuid';
-import mockChannels from './mocks/channels';
-import mockMessages from './mocks/messages';
 import md5 from 'md5';
 import { generateTokenForUser } from '$/passport-auth/lib';
 import { RECAPTCHA_API_KEY } from '$/constants';
@@ -16,25 +14,27 @@ const MESSAGES_PAGE_SIZE = 20;
 
 export default (app: App) => {
   const Query = {
-    getChannels: () => {
-      return mockChannels;
+    getChannels: (parent: {}, args: {communityUUID: string}) => {
+      /* TODO bariscc: check if user has permission */
+      return app.models.Channel.findAll({
+        where: { community_uuid: args.communityUUID },
+      });
     },
     getMessagesForChannel: (parent: {}, args: {channelUUID: string, cursor: number}) => {
-      const paginatedMessages = mockMessages[args.channelUUID];
-      if (paginatedMessages.length < MESSAGES_PAGE_SIZE) {
-        return {
-          messages: paginatedMessages,
-          nextCursor: null,
-        };
-      }
-      const cursor = args.cursor ? args.cursor : 1;
-      const start = paginatedMessages.length - MESSAGES_PAGE_SIZE * cursor;
+      const cursor = args.cursor ? args.cursor : 0;
+
       return {
-        nextCursor: start <= 0 ? null : cursor + 1,
-        messages: paginatedMessages.slice(
-          start < 0 ? 0 : start,
-          start + MESSAGES_PAGE_SIZE,
-        ),
+        messages: app.models.Message.findAll({
+          where: { channel_uuid: args.channelUUID },
+          include: [
+            {
+              model: app.models.User, as: 'sender',
+            },
+          ],
+          offset: MESSAGES_PAGE_SIZE * cursor,
+          limit: MESSAGES_PAGE_SIZE,
+        }),
+        nextCursor: cursor + 1,
       };
     },
     getCommunityMembers: (parent: {}, args: { uuid: uuid }) => {
@@ -228,17 +228,16 @@ export default (app: App) => {
     // CHAT
     sendMessage: (parent: {}, args: {
       channelUUID: string,
-      sender: string,
+      senderUUID: string,
       text: string,
     }) => {
-      const message = {
+      /* TODO bariscc: sanitize text */
+      const message = app.models.Message.create({
         uuid: uuid(),
-        channelUUID: args.channelUUID,
-        sender: args.sender.slice(0, 10),
+        channelUuid: args.channelUUID,
+        senderUuid: args.senderUUID,
         text: args.text.slice(0, 100),
-        ts: Date.now().toString(),
-      };
-      mockMessages[args.channelUUID].push(message);
+      });
       pubsub.publish('MESSAGE_SENT', { messageSent: message });
       return message;
     },
