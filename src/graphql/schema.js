@@ -144,12 +144,13 @@ export default gql`
     ): Message
 
     login(email: String!, password: String!) : LoggedInUserDetails!
+    logout: Boolean
     signup(
-      email: String!, 
-      password: String!, 
+      email: String!,
+      password: String!,
       captchaResponse: String!
     ): String
-  }  
+  }
 
   type Subscription {
     messageSent(channelUUID: String!): Message

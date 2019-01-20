@@ -1,8 +1,8 @@
 import type App from '$/lib/app';
+import { ApolloError, AuthenticationError } from 'apollo-server';
 import { PubSub, withFilter } from 'graphql-subscriptions';
 import uuid from 'uuid';
 import md5 from 'md5';
-import jwt from 'jsonwebtoken';
 import axios from 'axios';
 import validator from 'validator';
 
@@ -169,30 +169,28 @@ export default (app: App) => {
       email: string,
       password: string
     }) => {
-      // 1. check if there is a user with that email
+      // check if there is a user with that email
       const user = await app.models.User.findOne({
         where: { email: args.email },
       });
 
       if (!user) {
-        throw new Error(`No such user found for email ${args.email}`);
-      }
-      // 2. check if their password is correct
-      let valid = true;
-
-      if (md5(args.password) !== user.passwordHash) {
-        valid = false;
+        throw new AuthenticationError('Username and/or password is incorrect.');
       }
 
-      if (!valid) {
-        throw new Error('Invalid password');
+      const userObj = user.get();
+
+      // check if their password is correct
+      if (md5(args.password) !== userObj.passwordHash) {
+        throw new AuthenticationError('Username and/or password is incorrect.');
       }
-      // 3. generate the jwt token
-      // todo: we have to create variable name like app_secret for second argument.
-      const token = jwt.sign({ userId: user.uuid }, 'mustafa');
-      // 5. return the user
-      return { uuid: user.uuid, email: user.email, token };
+
+      // all good, generate the jwt token
+      const token = generateTokenForUser(userObj);
+
+      return { ...userObj, token };
     },
+    logout: () => true,
     signup: async (parent: {}, args: {
       email: string,
       password: string,
@@ -202,13 +200,13 @@ export default (app: App) => {
       const verificationUrl = `https://www.google.com/recaptcha/api/siteverify?secret=${RECAPTCHA_API_KEY}&response=${args.captchaResponse}`;
       const captchaResult = await axios(verificationUrl).then(response => response.data.success);
       if (!captchaResult) {
-        throw new Error('Recaptcha verification failed, please refresh the page and try again.');
+        throw new AuthenticationError('Recaptcha verification failed, please refresh the page and try again.');
       }
 
       // input validations
-      if (!validator.isEmail(args.email)) { throw new Error('E-mail address must be valid.'); }
+      if (!validator.isEmail(args.email)) { throw new ApolloError('E-mail address must be valid.'); }
       if (!validator.isLength(args.password, { min: 6 })) {
-        throw new Error('Password must be at least 6 characters long.');
+        throw new ApolloError('Password must be at least 6 characters long.');
       }
 
       // check if email already exists
@@ -216,7 +214,7 @@ export default (app: App) => {
         where: { email: args.email },
       });
       if (exists) {
-        throw new Error('This e-mail address is already registered');
+        throw new ApolloError('This e-mail address is already registered.');
       }
 
       // all validations passed, create the user
@@ -227,7 +225,7 @@ export default (app: App) => {
         passwordHash,
       });
 
-      return generateTokenForUser(user);
+      return generateTokenForUser(user.get());
     },
     createUser: (
       parent: {},
