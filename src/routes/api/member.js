@@ -10,14 +10,6 @@ const routes = (app: App): void => {
     return res.json(req.user);
   });
 
-  router.post('/login', authenticationMiddleware, (req: exExpress$Request, res: express$Response) => {
-    const { user } = req;
-    return res.json({
-      user,
-      token: generateTokenForUser(user),
-    });
-  });
-
   router.post('/logout', authenticationMiddleware, (req: exExpress$Request, res: express$Response) => {
     req.logout();
     res.json({ success: true });

@@ -2,10 +2,12 @@ import type App from '$/lib/app';
 import { PubSub, withFilter } from 'graphql-subscriptions';
 import uuid from 'uuid';
 import md5 from 'md5';
-import { generateTokenForUser } from '$/passport-auth/lib';
-import { RECAPTCHA_API_KEY } from '$/constants';
+import jwt from 'jsonwebtoken';
 import axios from 'axios';
 import validator from 'validator';
+
+import { generateTokenForUser } from '$/passport-auth/lib';
+import { RECAPTCHA_API_KEY } from '$/constants';
 
 export const pubsub = new PubSub();
 
@@ -162,6 +164,34 @@ export default (app: App) => {
         tier: args.tier,
         visibility: args.visibility,
       });
+    },
+    login: async (parent: {}, args: {
+      email: string,
+      password: string
+    }) => {
+      // 1. check if there is a user with that email
+      const user = await app.models.User.findOne({
+        where: { email: args.email },
+      });
+
+      if (!user) {
+        throw new Error(`No such user found for email ${args.email}`);
+      }
+      // 2. check if their password is correct
+      let valid = true;
+
+      if (md5(args.password) !== user.passwordHash) {
+        valid = false;
+      }
+
+      if (!valid) {
+        throw new Error('Invalid password');
+      }
+      // 3. generate the jwt token
+      // todo: we have to create variable name like app_secret for second argument.
+      const token = jwt.sign({ userId: user.uuid }, 'mustafa');
+      // 5. return the user
+      return { uuid: user.uuid, email: user.email, token };
     },
     signup: async (parent: {}, args: {
       email: string,

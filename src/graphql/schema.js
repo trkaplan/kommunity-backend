@@ -45,6 +45,7 @@ export default gql`
     location: String
     avatarUploadUuid: ID
     lastSeenAt: Date
+    token: String
   }
 
   type UserDetails {
@@ -141,6 +142,8 @@ export default gql`
       senderUUID: String,
       text: String,
     ): Message
+
+    login(email: String!, password: String!) : LoggedInUserDetails!
     signup(
       email: String!, 
       password: String!, 
