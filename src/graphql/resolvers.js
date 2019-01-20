@@ -1,9 +1,13 @@
 import type App from '$/lib/app';
+import { ApolloError, AuthenticationError } from 'apollo-server';
 import { PubSub, withFilter } from 'graphql-subscriptions';
 import uuid from 'uuid';
-import mockChannels from './mocks/channels';
-import mockMessages from './mocks/messages';
 import md5 from 'md5';
+import axios from 'axios';
+import validator from 'validator';
+
+import { generateTokenForUser } from '$/passport-auth/lib';
+import { RECAPTCHA_API_KEY } from '$/constants';
 
 export const pubsub = new PubSub();
 
@@ -12,33 +16,36 @@ const MESSAGES_PAGE_SIZE = 20;
 
 export default (app: App) => {
   const Query = {
-    getChannels: () => {
-      return mockChannels;
+    getChannels: (parent: {}, args: {communityUUID: string}) => {
+      /* TODO bariscc: check if user has permission */
+      return app.models.Channel.findAll({
+        where: { community_uuid: args.communityUUID },
+      });
     },
     getMessagesForChannel: (parent: {}, args: {channelUUID: string, cursor: number}) => {
-      const paginatedMessages = mockMessages[args.channelUUID];
-      if (paginatedMessages.length < MESSAGES_PAGE_SIZE) {
-        return {
-          messages: paginatedMessages,
-          nextCursor: null,
-        };
-      }
-      const cursor = args.cursor ? args.cursor : 1;
-      const start = paginatedMessages.length - MESSAGES_PAGE_SIZE * cursor;
+      const cursor = args.cursor ? args.cursor : 0;
+
       return {
-        nextCursor: start <= 0 ? null : cursor + 1,
-        messages: paginatedMessages.slice(
-          start < 0 ? 0 : start,
-          start + MESSAGES_PAGE_SIZE,
-        ),
+        messages: app.models.Message.findAll({
+          where: { channel_uuid: args.channelUUID },
+          include: [
+            {
+              model: app.models.User, as: 'sender',
+            },
+          ],
+          offset: MESSAGES_PAGE_SIZE * cursor,
+          limit: MESSAGES_PAGE_SIZE,
+        }),
+        nextCursor: cursor + 1,
       };
     },
     getCommunityMembers: (parent: {}, args: { uuid: uuid }) => {
       // returns community members for given community id
       return app.models.Community.findOne({
         include: [
-          { model: app.models.User },
-          { model: app.models.CommunityUser },
+          {
+            model: app.models.User, as: 'users',
+          },
         ],
         where: { uuid: args.uuid },
       });
@@ -158,6 +165,68 @@ export default (app: App) => {
         visibility: args.visibility,
       });
     },
+    login: async (parent: {}, args: {
+      email: string,
+      password: string
+    }) => {
+      // check if there is a user with that email
+      const user = await app.models.User.findOne({
+        where: { email: args.email },
+      });
+
+      if (!user) {
+        throw new AuthenticationError('Username and/or password is incorrect.');
+      }
+
+      const userObj = user.get();
+
+      // check if their password is correct
+      if (md5(args.password) !== userObj.passwordHash) {
+        throw new AuthenticationError('Username and/or password is incorrect.');
+      }
+
+      // all good, generate the jwt token
+      const token = generateTokenForUser(userObj);
+
+      return { ...userObj, token };
+    },
+    logout: () => true,
+    signup: async (parent: {}, args: {
+      email: string,
+      password: string,
+      captchaResponse: string
+    }) => {
+      // check captcha result before all
+      const verificationUrl = `https://www.google.com/recaptcha/api/siteverify?secret=${RECAPTCHA_API_KEY}&response=${args.captchaResponse}`;
+      const captchaResult = await axios(verificationUrl).then(response => response.data.success);
+      if (!captchaResult) {
+        throw new AuthenticationError('Recaptcha verification failed, please refresh the page and try again.');
+      }
+
+      // input validations
+      if (!validator.isEmail(args.email)) { throw new ApolloError('E-mail address must be valid.'); }
+      if (!validator.isLength(args.password, { min: 6 })) {
+        throw new ApolloError('Password must be at least 6 characters long.');
+      }
+
+      // check if email already exists
+      const exists = await app.models.User.findOne({
+        where: { email: args.email },
+      });
+      if (exists) {
+        throw new ApolloError('This e-mail address is already registered.');
+      }
+
+      // all validations passed, create the user
+      const passwordHash = md5(args.password);
+      const user = await app.models.User.create({
+        uuid: uuid(),
+        email: args.email,
+        passwordHash,
+      });
+
+      return generateTokenForUser(user.get());
+    },
     createUser: (
       parent: {},
       args: {
@@ -187,17 +256,16 @@ export default (app: App) => {
     // CHAT
     sendMessage: (parent: {}, args: {
       channelUUID: string,
-      sender: string,
+      senderUUID: string,
       text: string,
     }) => {
-      const message = {
+      /* TODO bariscc: sanitize text */
+      const message = app.models.Message.create({
         uuid: uuid(),
-        channelUUID: args.channelUUID,
-        sender: args.sender.slice(0, 10),
+        channelUuid: args.channelUUID,
+        senderUuid: args.senderUUID,
         text: args.text.slice(0, 100),
-        ts: Date.now().toString(),
-      };
-      mockMessages[args.channelUUID].push(message);
+      });
       pubsub.publish('MESSAGE_SENT', { messageSent: message });
       return message;
     },

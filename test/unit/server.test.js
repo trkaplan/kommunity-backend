@@ -22,13 +22,6 @@ test('server returns 404', (done) => {
   });
 });
 
-test('server returns 401', (done) => {
-  http.get('http://localhost:4008/api/v1/member/me', (res) => {
-    expect(res.statusCode).toBe(401);
-    done();
-  });
-});
-
 test('server - /health returns OK', (done) => {
   http.get('http://localhost:4008/health', (res) => {
     expect(res.statusCode).toBe(200);

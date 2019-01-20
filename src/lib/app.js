@@ -16,7 +16,6 @@ import type { Sentry } from '@sentry/node';
 import { SubscriptionServer } from 'subscriptions-transport-ws';
 import helmet from 'helmet';
 import config from '$/config';
-import { getAllFiles } from './helpers';
 import DbClient, { importModels } from './db-client';
 
 import gqlSchema from '$/graphql/schema';
@@ -26,7 +25,6 @@ import LocalPassportStrategy from '$/passport-auth/local-strategy';
 import JwtPassportStrategy from '$/passport-auth/jwt-strategy';
 
 export default class App {
-  routesPath: string;
   server: Server;
   modelsPath: string;
   config: AppConfig;
@@ -38,7 +36,6 @@ export default class App {
     this.config = config;
 
     const srcPath = path.join(path.resolve(), 'src');
-    this.routesPath = path.join(srcPath, 'routes');
     this.modelsPath = path.join(srcPath, 'models');
 
     // initialize the app
@@ -167,15 +164,11 @@ export default class App {
   };
 
   initRoutes = (): void => {
-    const that = this;
-    getAllFiles(this.routesPath, [])
-      .filter((file: string) => {
-        return (file.indexOf('.') !== 0) && (file.slice(-3) === '.js');
-      })
-      .forEach((file: string) => {
-        // eslint-disable-next-line
-        require(file)(that);
-      });
+    const router: express$Router = Express.Router();
+    router.get('/health', (req: exExpress$Request, res: express$Response) => {
+      res.end('OK');
+    });
+    this.express.use('/', router);
   };
 
   initGqlServer = (express: express$Application): void => {
@@ -229,9 +222,5 @@ export default class App {
       console.log(`GRAPHQL 🚀  Server ready at http://localhost:${that.config.gqlServer.port}${that.config.gqlServer.rootPath}`);
       console.log(`GRAPHQL ✨  Playground server ready at http://localhost:${that.config.gqlServer.port}${that.config.gqlServer.playgroundPath}`);
     });
-  }
-
-  registerRoute = (route: string, router: express$Router): void => {
-    this.express.use(route, router);
   }
 }
